@@ -23,47 +23,36 @@ $(function (){
 			if (y <= 0){ // Y is negative
 				if (x > y){
 					console.log('top');
-					MIDIjs.stop();
-					MIDIjs.play('E-red.mid');
+					colorClick(80);
 				} else {
-					console.log('left')
-					MIDIjs.stop();
-					MIDIjs.play('G-green.mid');
-					
+					console.log('left')	
+					colorClick(50);				
 				}
 			} else { // y is positive
 				if (Math.abs(x) > y){
 					console.log('left');
-					MIDIjs.stop();
-					MIDIjs.play('G-green.mid');
+					colorClick(50);
 				} else {
 					console.log('bottom')
-					MIDIjs.stop();
-					MIDIjs.play('C-yellow.mid');
+					colorClick(60);
 				}
 			}
 		} else { // X is positive
 			if (y <= 0){ // Y is negative
 				if (x > Math.abs(y)){
 					console.log('right');
-					MIDIjs.stop();
-					MIDIjs.play('G-blue.mid');
-					
+					colorClick(70);					
 				} else {
 					console.log('top')
-					MIDIjs.stop();
-					MIDIjs.play('E-red.mid');
+					colorClick(80);
 				}
 			} else { // y is positive
 				if (x > y){
 					console.log('right ');
-					MIDIjs.stop();
-					MIDIjs.play('G-blue.mid');
+					colorClick(70);
 				} else {
 					console.log('bottom');
-					MIDIjs.stop();
-					MIDIjs.play('C-yellow.mid');
-					
+					colorClick(60);
 				}
 			}
 		}
@@ -71,9 +60,31 @@ $(function (){
 
 
 	});
+	// directly from MIDI.js example
+
+
+
 });
 
 
+function colorClick(noteNum){
+	MIDI.loadPlugin({
+	soundfontUrl: "../../../lib/js/soundfont/",
+	instrument: "acoustic_grand_piano",
+	onprogress: function(state, progress) {
+		console.log(state, progress);
+	},
+	onsuccess: function() {
+		var delay = 0; // play one note every quarter second
+		var note = noteNum; // the MIDI note
+		var velocity = 127; // how hard the note hits
+		// play the note
+		MIDI.setVolume(0, 127);
+		MIDI.noteOn(0, note, velocity, delay);
+		MIDI.noteOff(0, note, delay + 0.75);
+	}
+});
+}
 
 
 
