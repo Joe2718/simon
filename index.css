@@ -1,0 +1,55 @@
+body {
+    background-color: lightblue;
+    text-align: center;
+}
+h1{
+	color:Black;
+text-align:center;
+}
+p {
+	text-align:center;
+}
+.container {
+	display: inline-block;
+	position: relative;
+	text-align: center;
+	width: 500px;
+	height: 500px;
+}
+#outerRim{
+	position: absolute;
+	width: 500px;
+	height: 500px;
+	border-radius: 50%;
+	border: black solid 10px;
+
+}
+#colorCircle{
+	position: absolute;
+	margin:10px;
+	/*  Giving a 0px height and width to keep offset in center.
+		I only want the border for this div and not the div itself.	
+	 */
+	width: 0px;
+	height: 0px;
+	border-radius: 50%;
+	border: solid 250px;
+	border-top-color: red;
+	border-right-color: blue;
+	border-bottom-color: yellow;
+	border-left-color: green;
+}
+#colorCircle:hover{
+	cursor: pointer;
+
+}
+#centerCircle{
+	position: absolute;
+	top:135px;
+	left:135px;
+	width: 45%;
+	height: 45%;
+	border-radius: 50%;
+	border: black solid 10px;
+	background: grey;
+}
