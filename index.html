@@ -9,11 +9,28 @@
 
 	<link rel="stylesheet" type="text/css" href="index.css" >
 <body>
-<h1> Simon</h1>
 <div class='container'>
 <div id='outerRim'></div>
 <div id='colorCircle'></div>
-<div id='centerCircle'></div>
+<div id='centerCircle'>
+	<div id="title">Simon</div>
+	<div id="scoreRow">
+		<div id='scoreContainer'>
+			<div id="scoreDiv">&nbsp</div>
+			Count
+		</div>
+		<div id="startDiv"><a class='button' id='gameButton' onClick='game()'> &nbsp</a><br /> Start</div>
+		<div id="strictDiv"><span class='button' id='strictIndicator'>&nbsp</span><br /><a class='button' id='strictButton' onClick='toggleStrict()'>&nbsp </a><br />Strict</div>
+	</div>
+	<div id="power"><span class='buttLabel'> OFF</span>
+		<label class="switch">
+		<input type="checkbox">
+		<div class="slider"></div>
+		</label><span class='buttLabel'> ON</span>
+	</div>
+
+
+</div>
 </div>
 
 <p> <a href="../../index.html">Parent</a> </p>

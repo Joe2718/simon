@@ -22,3 +22,12 @@ G-note (blue, lower right);
 C-note (yellow, lower left);
 E-note (red, upper right).  
 G-note (green, upper left, an octave higher than blue)
+
+
+
+
+
+
+
+
+
