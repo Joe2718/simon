@@ -1,35 +1,49 @@
 var sounds = []; // array of sound objects 
-var best = []; // buttons on the game 
-var last = []; // buttons on the game .. last can also be current.
+// var best = []; // buttons on the game 
+var current = []; // current key list
 var speed = 400; // beginning delay .. lower this is, faster game will be
 var blinkMe = 100;
 var strict = false;
 var power = false;
 var blinkMe = 100;
+var progress = 0; // step in user playback
+var inGame = false;
+var isComputer = true;
+
 
 $(function (){
 	createSounds();
 	mapBorders();
-	for (var i = 1; i <=4; i++){// hit all the colors once upon load to make sure sounds are loaded.
-		colorClick(i);
-	} 
 
 });
+// ******************** New Round ******************************
+function newRound(){
+	if (power){
+		inGame=true;
+		current.length = 0;
+		game();
+	}
+}
+
+
 // *********************** Game loop ****************************************
 function game(){
+	isComputer=true;
+	progress=0;
 	oldSpeed = speed;
-	if (last.length <=25){
-		speed = (Math.floor(600-((last.length +1)*15)));
+	if (current.length < 25){
+		speed = (Math.floor(600-((current.length +1)*15)));
 	} else {
 		speed = 225;
 	}
 	blinkMe = Math.floor(speed/6);
 	console.log('speed is ' + speed);  // speed will change with length of array
 	let ranKey = Math.floor((Math.random()*4)+1);
-	last.push(ranKey);
-	let score = last.length -1; // need to display this number 
+	current.push(ranKey);
+	let score = current.length -1; // need to display this number 
 	// set score 
-	let templist = last.slice(0,last.length); // should duplicate array, kept getting just the pointer being passed and downsized.
+	$('#scoreDiv').empty().text(score);
+	let templist = current.slice(0,current.length); // should duplicate array, kept getting just the pointer being passed and downsized.
 	playList(templist, oldSpeed);  
 }
 //  ******************* play list of keys *********************************
@@ -37,15 +51,16 @@ function playList(list, oldSpeed){
 	var delays;
 	if (list.length == 1){let speed = oldSpeed;}
 	if (list.length > 1) {
-		colorClick(list[0]);
+		colorSelect(list[0]);
 		list.shift();
 		delays = window.setTimeout(function (){
 			playList(list,oldSpeed);
 		},speed+blinkMe);	
 	} else { 
 		speed = oldSpeed;
-		colorClick(list[0]);
+		colorSelect(list[0]);
 		list.shift();
+		isComputer=false;
 	}	
 }
 
@@ -57,9 +72,12 @@ function createSounds(){
 		sounds.push(audio);
 	}
 }
+
+
+
 // *********************** This just plays sounds then calls color change ***********************
-function colorClick(noteNum){  // going to keep this here just in case I want to mess with sound
-     sounds[noteNum].currentTime = 0;
+function colorSelect(noteNum){  // going to keep this here just in case I want to mess with sound
+	sounds[noteNum].currentTime = 0;
 	sounds[noteNum].play();
 	setColor(noteNum);
 }
@@ -96,16 +114,73 @@ function setColor(colorNum){
 				break;
 	}
 }
-function toggleStrict (){
-	strict = !strict;
-	if (strict){
-		$('#strictIndicator').css('background','red');
+
+// **********************************power on ***********************************
+function powerOn(){
+	power = !power;
+	if (power){
+		$('#scoreDiv').css('color','red')
+		.empty()
+		.text('0');
+		for (var i = 1; i <=4; i++){ // hit all the colors once upon load to make sure sounds are loaded.
+			colorSelect(i);
+		} 
+
 	} else {
-		$('#strictIndicator').css('background','black');
+		$('#scoreDiv').css('color','black')
+		.empty()
+		.text('88');
 	}
 }
 
-// ******************************** maps borders to sound clicks *********************
+// ********************************** toggles strict ******************************
+function toggleStrict (){
+	if(power){
+		strict = !strict;
+		if (strict){
+			$('#strictIndicator').css('background','red');
+		} else {
+			$('#strictIndicator').css('background','black');
+		}
+	}
+}
+// ******************************* on click routine *********************************
+function colorClick(num){
+	// ok, now only the player will be here and can process and check stuff
+	if (power && !isComputer){
+		if (inGame){
+			if (num == current[progress]){
+				progress++;				
+				console.log("Match!  "+ (progress) + "   "+current.length);
+				colorSelect(num);
+				if(progress == current.length){
+					delays =  window.setTimeout(game, 2000);
+				}
+			} else {
+				colorSelect(0);
+				if (strict){
+					console.log('you lose.');
+					inGame=false;
+				} else {
+					console.log('Try again.');
+					progress=0;
+					isComputer=true;
+					let templist = current.slice(0,current.length); // should duplicate array, kept getting just the pointer being passed and downsized.
+					delays =  window.setTimeout(function (){  
+						playList(templist, 500); 
+					}, 2000);
+					
+				}
+			}
+		} else {
+			colorSelect(num); // will play the sound when not in a game
+		}
+
+
+		
+	}
+}
+// ******************************** maps borders to mouse clicks *********************
 function mapBorders(){
 	$('#colorCircle').click(function(ele){
 		// let outer=$(this).outerHeight();

@@ -19,16 +19,15 @@
 			<div id="scoreDiv">&nbsp</div>
 			Count
 		</div>
-		<div id="startDiv"><a class='button' id='gameButton' onClick='game()'> &nbsp</a><br /> Start</div>
+		<div id="startDiv"><a class='button' id='gameButton' onClick='newRound()'> &nbsp</a><br /> Start</div>
 		<div id="strictDiv"><span class='button' id='strictIndicator'>&nbsp</span><br /><a class='button' id='strictButton' onClick='toggleStrict()'>&nbsp </a><br />Strict</div>
 	</div>
 	<div id="power"><span class='buttLabel'> OFF</span>
 		<label class="switch">
-		<input type="checkbox">
+		<input type="checkbox" onClick='powerOn()'>
 		<div class="slider"></div>
 		</label><span class='buttLabel'> ON</span>
 	</div>
-
 
 </div>
 </div>
