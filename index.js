@@ -12,8 +12,9 @@ var isComputer = true;
 
 
 $(function (){
-	createSounds();
-	mapBorders();
+	addKeys();    // adds keys
+	createSounds();  // creates sounds
+	mapBorders();  // makes things clickable
 
 });
 // ******************** New Round ******************************
@@ -24,7 +25,6 @@ function newRound(){
 		game();
 	}
 }
-
 
 // *********************** Game loop ****************************************
 function game(){
@@ -40,7 +40,7 @@ function game(){
 	console.log('speed is ' + speed);  // speed will change with length of array
 	let ranKey = Math.floor((Math.random()*4)+1);
 	current.push(ranKey);
-	let score = current.length -1; // need to display this number 
+	let score = current.length; // need to display this number 
 	// set score 
 	$('#scoreDiv').empty().text(score);
 	let templist = current.slice(0,current.length); // should duplicate array, kept getting just the pointer being passed and downsized.
@@ -72,8 +72,6 @@ function createSounds(){
 		sounds.push(audio);
 	}
 }
-
-
 
 // *********************** This just plays sounds then calls color change ***********************
 function colorSelect(noteNum){  // going to keep this here just in case I want to mess with sound
@@ -122,8 +120,8 @@ function powerOn(){
 		$('#scoreDiv').css('color','red')
 		.empty()
 		.text('0');
-		for (var i = 1; i <=4; i++){ // hit all the colors once upon load to make sure sounds are loaded.
-			colorSelect(i);
+		for (var i = 1; i <=4; i++){ // hit all the colors once upon ON. 
+			colorSelect(i);         // for some reason I think some games used to do that.  
 		} 
 
 	} else {
@@ -174,10 +172,7 @@ function colorClick(num){
 			}
 		} else {
 			colorSelect(num); // will play the sound when not in a game
-		}
-
-
-		
+		}		
 	}
 }
 // ******************************** maps borders to mouse clicks *********************
@@ -190,7 +185,7 @@ function mapBorders(){
 		// where the click was made on the border.  
 		// I don't even think I need this with only showing border.
 		// if I translated from where the offset's base is (probalby the upper right corner)
-		// to the center (innerWidth / 2 ) maybe this could be a general purpose function
+		// to the center (innerWidth / 2 ) I should expand this into a general purpose function
 		// for determining if you click on a border.  
 		let x = ele.offsetX;
 		let y = ele.offsetY; 
@@ -233,4 +228,40 @@ function mapBorders(){
 			}
 		}
 	});
+}
+
+// ***************************** keyboard *************************************
+function addKeys(){
+	document.addEventListener("keydown", function(k){
+	// console.log(k.keyCode);	
+	switch(k.keyCode){
+		case 38:
+		case 87:
+		case 104:
+			console.log("8");
+			colorClick(1);
+			break;
+		case 68:
+		case 39:
+		case 102:
+			console.log("6");
+			colorClick(2);
+			break;
+		case 83:
+		case 40:
+		case 98:
+			console.log("2");
+			colorClick(3);
+			break;
+		case 65:
+		case 37:
+		case 100:
+			console.log("4");
+			colorClick(4);
+			break;
+
+		// shows keys not tagged yet	
+		default: console.log(k.keyCode + " keycode has not been mapped.");
+		}
+	}, false);
 }
