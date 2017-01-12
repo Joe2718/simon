@@ -88,8 +88,12 @@ function createSounds(arr){
 	arr.forEach(function (soundNum,index){
 		sounds.push(masterSoundList[soundNum]);  // have to make masterList first
 		// have to figure out how to get the specific node number in the class 'tonekeys' and set it's background 
-		// to the dullColors[]
-		$toneLoc[soundNum].style.backgroundColor = dullColors[index];
+		// to the dullColors[] unless it's the one selected.		
+		if (index === previous){
+			$toneLoc[soundNum].style.backgroundColor = brightColors[index];
+		} else {
+			$toneLoc[soundNum].style.backgroundColor = dullColors[index];
+		}
 	})
 
 }
@@ -140,7 +144,7 @@ function soundListCreator(callback){
 			 			//.addEventListener("click", optKey(tAudio[index],true))
 			 			.click(function (){
 			 				var toneNum = $(this).attr('tone');
-			 				optKey(masterSoundList[toneNum]);
+			 				optKey(toneNum);									 				
 			  			})
 			 			.text(toneName.substring(0,toneName.length-4))
 		 			);
@@ -153,10 +157,22 @@ function soundListCreator(callback){
 	$('#soundColor span').click(colorEdit);
 	if(typeof callback === 'function'){ callback;}
 }
-
-function optKey(tone){
-	tone.currentTime = 0;
-	tone.play();
+// ********************* clicking on a piano like key in options points here **********************
+function optKey(toneNum){
+	masterSoundList[toneNum].currentTime = 0;
+	masterSoundList[toneNum].play();
+	// previous is storing the selected colornumber to edit
+	// soundList is storing the sounds for the colorNumbers
+	// which also gives me the key divs via $toneloc
+	// change previous background color to white in tonloc (previous is a number relating to a color)
+	// $toneLoc[(soundList[colorSelected])].style.backgroundColor = brightColors[colorSelected];
+	$toneLoc[soundList[previous]].style.backgroundColor = "white";
+	// change current background color to previous color in toneloc
+	$toneLoc[toneNum].style.backgroundColor = brightColors[previous];
+	// change soundList to store current divkey 
+	soundList[previous]=toneNum;
+	// assign the colors to the game via 
+	createSounds(soundList); // easy enough to hit enter to finish that step
 }
 
 
