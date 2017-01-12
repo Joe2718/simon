@@ -6,9 +6,17 @@
 	<title> Simon </title>
 	<script type="text/javascript" src="../../../lib/jquery_min.js"></script>
 	<script type="text/javascript" src="index.js"></script>
-
+	<!--
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"> </script>
+  	wasted too much time trying to get the accoridion in this to work
+  	will write my own quicker.
+  	-->
 	<link rel="stylesheet" type="text/css" href="index.css" >
 <body>
+<div id='info'> 
+<div id='options-tab' class='tab menu'>Options</div>
+<div id='instructions-tab' class='tab menu'>Instructions</div> 
+</div>
 <div class='container'>
 <div id='outerRim'></div>
 <div id='colorCircle'></div>
@@ -31,6 +39,32 @@
 
 </div>
 </div>
+<div id='instructions' class='menu'> <h2> Instructions </h2> 
+	<ol>
+		<li>Turn ON using the power switch.</li>
+		<li>Press START</li>
+		<li>After the tone and light sequence finishes, click the coorsponding colors to repeat it.
+			<br /> SIMON will change to a light color when it's your turn.</li>
+		<li>Keyboard may also be used instead of clicking. 
+			<ul><li> Up 	Right 	Down and 	Left arrows.</li>
+			    <li> 8, 	6, 		2,	and 	4 on the NUMpad</li>
+			    <li> W A S D   </li>  
+			</ul>
+		</li>
+	</ol>
+	If you make a mistake, don't worry.  The pattern will repeat itself and you'll have another try.  <br />
+<br />
+	STRICT:  If strict is selected, game will END if you make a mistake. <br />
+<br />
+	Special Note: If game has been played once and ended, clicking any color will play the tone.   <br />
+
+
+</div>
+<div id='options' >
+<div id='soundColor'>
+<span id='red'> RED</span> <span id='blue'>BLUE</span> <span id='yellow'>YELLOW</span>  <span id='green'>GREEN</span> <span id='fail'>FAIL</span>
+ </ul></div><div id='soundURL' ></div></div>
+
 
 </body>
 </html>

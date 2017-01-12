@@ -25,6 +25,12 @@ G-note (green, upper left, an octave higher than blue)
 
 
 
+accordion div = "soundURL" 
+first key from object and create H3 with the 
+	name: value 
+	files: [] that will fill the keys 
+	make a loop that reads all the files and creates tiny divs 
+	with class of .tonekeys white back ground 
 
 
 
