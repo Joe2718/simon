@@ -66,6 +66,10 @@ li{
 	border: black solid 10px;
 	background: grey;
 }
+#centerCircle:hover{
+	cursor: default;
+}
+
 #title{
 	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 	text-align: center;
@@ -145,6 +149,7 @@ li{
 	margin-top:25%;
 	background: yellow;
 }
+
 #strictButton:hover{
 	cursor: pointer;
 	cursor:hand;
@@ -159,6 +164,7 @@ li{
 	height:5px;
 	background: black;
 }
+
 #power{
 	width: 60%;
 	margin: 5% 20%;
@@ -166,11 +172,15 @@ li{
 }
 .buttLabel{
 	position: relative;
-	bottom: 5px;
+	bottom: 4px;
 	font-size:15px;
 	font-weight:bold;
 }
+.buttLabel:hover{
+	cursor: default;
+}
 /* The switch - the box around the slider .. grabbed straight from w3schools.com  */
+/* and then trashed when I coudln't get it to scale accurately  */
 .switch {
   position: relative;
   display: inline-block;
@@ -178,23 +188,23 @@ li{
   height: 100%;
 }
 
-/* Hide default HTML checkbox */
-.switch input {display:none;}
-
 /* The slider */
 .slider {
   position: absolute;
-  cursor: pointer;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   background-color: #000;
-  -webkit-transition: .4s;
-  transition: .4s;
 }
+/* 
+.slider:hover{
+	cursor: pointer;
+  	cursor:hand;
+}
+*/
 
-.slider:before {
+#sliderButton{
   position: absolute;
   content: "";
   height: 16px;
@@ -202,24 +212,11 @@ li{
   left: 2px;
   bottom: 2px;
   background-color: #007eaf;
-  -webkit-transition: .4s;
-  transition: .4s;
 }
-
-input:checked + .slider {
-  background-color: black;
+#sliderButton:hover{
+	cursor: pointer;
+	cursor: hand;
 }
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(18px);
-  -ms-transform: translateX(18px);
-  transform: translateX(18px);
-}
-
 #info{ /* information tab containing other tabs */
 
 }

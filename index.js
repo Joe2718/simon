@@ -216,18 +216,21 @@ function setColor(colorNum){
 // **************************************  power on ***************************************************
 function powerOn(){
 	power = !power;
-	if (power){
+	if (power){ // have to turn power on here
 		$('#scoreDiv').css('color','red')
 		.empty()
 		.text('0');
-		// for (var i = 1; i <=4; i++){ // hit all the colors once upon ON. 
-		// 	colorSelect(i);         // for some reason I think some games used to do that.  
-		// } 
-
-	} else {
+		// I'll make this relative to it's container 
+		// since button dimensions are smaller, length it get's dragged is increased by 2
+		// since it's smaller by 4 and want to keep the 2px border.
+		// to scale this slider, just scale $("#power .switch").width()
+		let tempMove = ""+($("#power .switch").width()/2+2)+"px";
+		$('#sliderButton').animate({left: tempMove});
+	} else { 		// have to turn power off here
 		$('#scoreDiv').css('color','black')
 		.empty()
 		.text('88');
+		$('#sliderButton').animate({left: '2px'});
 	}
 }
 
@@ -521,6 +524,16 @@ function scaleMe(){
 		setThisW = "" + (tempWidth2 * .44) + "px";
 		$('#strictIndicator').css('top',setThisH).css('left',setThisW);
 		// power switch now... trashing current power switch
+		tempWidth2 = $("#power").width()/4;
+		setThisW = "" + (tempWidth2) + "px";
+		setThisH = "" + (tempWidth2/2) + "px";
+		console.log(setThisW);
+		$('#power .switch').css('width',setThisW).css('height',setThisH);
+		setThisW = "" + (tempWidth2/2-4) + "px";
+		setThisH = "" + (tempWidth2/2-4) + "px";
+		$('#sliderButton').css('width',setThisW).css('height',setThisH);
+		setThisH = "" + (tempWidth2/2-4) + "px";
+		$('#power span').css('font-size',setThisH);
 	} else { // smaller screen so going to hide options and instructions buttons
 		$('#info').css('display','none');
 	}
@@ -528,6 +541,4 @@ function scaleMe(){
 	// if that reaches some amount (400px ) pop the middle out and place it under or next to the original
 	// I didn't care for popping it out at all, just freezing it at 400px min.
 	// seemed fine at 1600 all the way down to min.. blah, going to scale middle 
-
-
 }
