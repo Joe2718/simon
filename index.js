@@ -1,5 +1,5 @@
 var sounds = []; // array of sound objects 
-// var best = []; // buttons on the game 
+// var best = []; // original button on the game 
 var current = []; // current key list
 var speed = 400; // beginning delay .. lower this is, faster game will be
 var strict = false;
@@ -13,20 +13,20 @@ var masterSoundList = [];  // built from JSON file in soundfont directory
 var brightColors = ["lightgrey","red"    ,"blue"    , "yellow"    ,"lime"];      // did these here just to make it easy to 
 var dullColors   = ["grey","darkred","darkblue", "goldenrod" ,"darkgreen"]; // see which colors are used and easy to change.
 var $toneLoc;  // standard JS select of tonekey Divs, masterSoundList[0]=$toneLoc[0]    
-				// see options panel to understand.
+				// see instructions'instructions' panel to understand.
 var colorSelected=0;// number of color selected fail-0, red-1 blue-2 yellow-3 green-4   
 var previous=0; // previous selected.  I should have done this with a class or two, too many globals going on.  
 			// although I never planned on it going this far
-
+var useDim;	
 // ********************* Main onload function  *******************************
 $(function (){
 	addKeys();    // adds keys
 	soundListCreator();  // creates master sound list and assigns default sounds.
 	mapBorders();  // makes things clickable
 	addTabs();
-
+	setTimeout(scaleMe,100); // 1/10 second just .. not having issue so not sure why I did this.
 });
-// ************************** New Round ***********************************
+// ***************************************** New Round ******************************************************
 function newRound(){
 	if (power){
 		inGame=true;
@@ -35,7 +35,7 @@ function newRound(){
 	}
 }
 
-// *********************** Game loop ****************************************
+// ******************************************** Game loop *****************************************************
 function game(){
 	isComputer=true;
 	progress=0;
@@ -56,7 +56,7 @@ function game(){
 	let templist = current.slice(0,current.length); // should duplicate array, kept getting just the pointer being passed and downsized.
 	playList(templist, oldSpeed);  
 }
-//  ******************* play list of keys *********************************
+//  ******************************************** play list of keys ************************************************
 function playList(list, oldSpeed){
 	$('#title').css('color','black');
 	var delays;
@@ -79,9 +79,8 @@ function playList(list, oldSpeed){
 		list.shift();
 	}	
 }
-
-// ************************* creates the sound array *********************
-// sound0 = fail, sound1 = top, sound2 = right, sound3 = bottom, sound4 = left
+// ****************************************** creates the sound array ********************************************
+// 0 = fail, 1 = top, 2 = right, 3 = bottom, 4 = left
 function createSounds(arr){
 	sounds.length=0; // clears old sounds 
 	$toneLoc =  document.getElementsByClassName('tonekeys'); // can this really be this easy?
@@ -97,10 +96,10 @@ function createSounds(arr){
 	})
 
 }
-// ******* going to use some of the mp3's from https://github.com/mudcube/MIDI.js/ *********
+// ******* going to use some of the mp3's from https://github.com/mudcube/MIDI.js/ ********************************
 
 function soundListCreator(callback){
-	// Acoustic Piano List Load.
+	//  Master Sound List Load.
 	let masterCount =0;
 	$.ajax({
 		 dataType: "json",
@@ -132,7 +131,7 @@ function soundListCreator(callback){
 		 			//console.log(filePath + "  is the file being pushed as a path");
 		 			var audio = new Audio(filePath);
 		 			// console.log(audio);
-		 			masterSoundList.push(audio);
+		 			masterSoundList.push(audio);  // everything in this should be playable.
 		 			masterCount++;
 		 			let toneName = soundList[tempkey].files[index];
 		 			$accContainer.append(						
@@ -176,13 +175,13 @@ function optKey(toneNum){
 }
 
 
-// *********************** This just plays sounds then calls color change ***********************
+// *********************** This just plays sounds then calls color change ***********************************
 function colorSelect(noteNum){  // going to keep this here just in case I want to mess with sound
 	sounds[noteNum].currentTime = 0;
 	sounds[noteNum].play();
 	setColor(noteNum);
 }
-// ********************** switches color ***************************************************
+// ********************** switches color **************************************************************
 function setColor(colorNum){
 	var delays;
 	switch (colorNum) {
@@ -214,7 +213,7 @@ function setColor(colorNum){
 	}
 }
 
-// **********************************power on ***********************************
+// **************************************  power on ***************************************************
 function powerOn(){
 	power = !power;
 	if (power){
@@ -232,7 +231,7 @@ function powerOn(){
 	}
 }
 
-// ********************************** toggles strict ******************************
+// ********************************** toggles strict *********************************************
 function toggleStrict (){
 	if(power){
 		strict = !strict;
@@ -243,7 +242,7 @@ function toggleStrict (){
 		}
 	}
 }
-// ******************************* main  on click routine *********************************
+// ****************************************** main  on click routine *********************************
 function colorClick(num){
 	// ok, now only the player will be here and can process and check stuff
 	if (power && !isComputer){
@@ -370,18 +369,17 @@ function addKeys(){
 	}, false);
 }
 // *************************** all Instruction and Options below **********************
-
 function addTabs(){
 	var delays;
 	var tabOpen= '';
 	$('.menu').click( function(obj){ // clicking instructions tab.
 		var tempClick="";
-		// if (this.id == 'options-tab' || this.id == 'options'){  // getting rid of click on options panel due to accordian trial
-		if (this.id == 'options-tab'){
+		if (this.id == 'options-tab' || this.id == 'X'){  // getting rid of click on options panel due to accordian trial
+		// if (this.id == 'options-tab'){
 			tempClick = 'opt';
 			// console.log(tempClick + "  is tempClick");
 		}
-		if (this.id == 'instructions-tab' || this.id == '#instructions'){
+		if (this.id == 'instructions-tab' || this.id == 'instructions'){
 			tempClick = 'ins';
 			// console.log(tempClick + "  is tempClick");
 		}
@@ -409,7 +407,6 @@ function addTabs(){
 				$('.tab').css('border-color','black black tan black');
 		}
 	});
-
 	var openIns = function (){ $('#instructions').css('display','block').animate({width: '400px',opacity: 1},1000); 
 				$('#instructions-tab').css('z-index',9);
 				}
@@ -455,3 +452,47 @@ function colorEdit(color){
 	$toneLoc[(soundList[colorSelected])].style.backgroundColor = brightColors[colorSelected]; // with any luck this will work
 	previous=colorSelected;  // alright, this is working
 }	
+
+
+// ********************************* window scalability ************************************************************
+$(window).resize(scaleMe);
+
+function scaleMe(){
+	// alright, need to figure out what I want here.
+	console.log('resize functioning');
+	var offset = $('main-container').css('border-width');  // might not use this
+	var height  = $(window).height();
+	var width = $(window).width();
+	if (height > width){ 
+		useDim = width;
+	} else {
+	 	useDim = height; 	
+	}
+	// first scale outside ONLY - with the border's border.
+	// #outerRim - width & height=  ((useDim -20)/ 2) 
+	// #colorCircle - border = outerRim's height or width /2)
+	if(useDim >= 400){
+		let setThis = "" + (useDim -30)+"px"; // going to use just a little padding
+		$('#outerRim').css('height',setThis).css('width',setThis);
+		setThis = "" + (useDim-10)+"px"; 
+		$('.container').css('height',setThis).css('width',setThis);
+		setThis = "" + (((useDim -30)/2)+1)+ "px solid" ;
+			console.log(setThis) 
+		$('#colorCircle').css({
+			'border':setThis,
+			'border-top-color': 'darkred',
+			'border-right-color': 'darkblue',
+			'border-bottom-color': 'goldenrod',
+			'border-left-color':' darkgreen'
+		});
+		$('#info').css('display','block');
+	} else { // smaller screen so going to hide options and instructions buttons
+		$('#info').css('display','none');
+	}
+	// restructured just a bit and it went simple
+	// if that reaches some amount (400px ) pop the middle out and place it under or next to the original
+	// I didn't care for popping it out at all, just freezing it at 400px min.
+	// seemed fine at 1600 all the way down to min.. blah, going to scale middle 
+
+
+}

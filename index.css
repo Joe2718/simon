@@ -3,6 +3,10 @@
 body {
     background-color: lightblue;
     text-align: center;
+    	-webkit-user-select: none;  /* Chrome all / Safari all */
+  	-moz-user-select: none;     /* Firefox all */
+  	-ms-user-select: none;      /* IE 10+ */
+  	user-select: none;  
 }
 h1{
 	color:Black;
@@ -15,6 +19,10 @@ li{
 	text-align: left;
 }
 .container {
+	-webkit-user-select: none;  /* Chrome all / Safari all */
+  	-moz-user-select: none;     /* Firefox all */
+  	-ms-user-select: none;      /* IE 10+ */
+  	user-select: none;  
 	display: inline-block;
 	position: relative;
 	text-align: center;
@@ -31,7 +39,7 @@ li{
 }
 #colorCircle{
 	position: absolute;
-	margin:10px;
+	
 	/*  Giving a 0px height and width to keep offset in center.
 		I only want the border for this div and not the div itself.	
 	 */
@@ -46,15 +54,14 @@ li{
 }
 #colorCircle:hover{
 	cursor: pointer;
-
-
+	cursor:hand;
 }
 #centerCircle{
 	position: absolute;
-	top:135px;
-	left:135px;
-	width: 45%;
-	height: 45%;
+	top:-123px;
+	left:-123px;
+	width: 226px;
+	height: 226px;
 	border-radius: 50%;
 	border: black solid 10px;
 	background: grey;
@@ -80,8 +87,7 @@ li{
 	text-align: center;
 }
 #scoreContainer{
-	margin-left: 20px;
-	display: inline-block;
+	margin-left: 5px;
 	float:left;
 	width: 26%;
 	height: 30px;	
@@ -326,6 +332,18 @@ span:hover{
   	-moz-user-select: none;     /* Firefox all */
   	-ms-user-select: none;      /* IE 10+ */
   	user-select: none;  
+}
+#X{
+	position: absolute;
+	text-align: none;
+	padding: 1px 10px;
+	font-size: 8px;
+	right:0px;
+	top:0px;
+	color:white;
+	background-color: darkred;
+	border: solid black 1px;
+	border-radius: 2px;
 }
 .tonekeys{
 	transform: rotate(270deg);

@@ -33,6 +33,17 @@ first key from object and create H3 with the
 	with class of .tonekeys white back ground 
 
 
+************************************************
+Things left to do:
+OPTIONS needs a close trigger other than clicking the tab again.  
+Make an X, position it in upper right corner, maybe a red background 
+	add .menu class to it.  
+
+Add TONES  .. I'm really not sure if I'm going to continue with this.  I've overkilled Simon plenty enough already.  
+I still feel like I might need to scale up the center part a bit.  
+
+If I add Tones than I'll have to make the sound options accordion style or fill screen with it.  
+	I should add them AND make options accoridion just for the practice.
 
 
 
