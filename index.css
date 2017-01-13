@@ -70,7 +70,7 @@ li{
 	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 	text-align: center;
 	width: 80%;
-	margin-top:15%;
+	margin-top:12%;
 	height: 50px;
 	font-weight: bolder;
 	font-size: 50px;
@@ -79,8 +79,10 @@ li{
 }
 #scoreRow{
 	display: inline-block;
-	width: 100%;
-	height: 80px;
+	width: 90%;
+	height: 30%;
+	margin: 2% 5% 0px 5%;
+	overflow: hidden;
 }
 
 #power{
@@ -93,13 +95,10 @@ li{
 	height: 30px;	
 }
 #scoreDiv{
-	margin-top: 5px;
-	margin-left: 2px;
 	border: 1px solid black;
 	font-family: Digital;
+	padding-bottom: 4%;
 	color:red;
-	padding-top: 1px;
-	padding-bottom: 1px;
 	font-weight: bold;
 	font-size: 30px;
 	line-height: 30px;
@@ -115,6 +114,7 @@ li{
 	height: 60px;
 }
 #strictDiv{
+	position: relative;
 	float:left;
 	width: 29%;
 	height: 60px;
@@ -124,7 +124,6 @@ li{
     display:inline-block;
     width:20px;
     height:20px;
-    line-height:20px;
     border: 2px solid black;
     border-radius: 50%;
     color:#f5f5f5;
@@ -136,13 +135,14 @@ li{
     font-weight:bold;
 }
 #gameButton{
-	margin-top:18px;
+	margin-top:25%;
 	background: red;
 }
 #gameButton:hover{
 	cursor: pointer;
 }
 #strictButton{
+	margin-top:25%;
 	background: yellow;
 }
 #strictButton:hover{
@@ -151,17 +151,17 @@ li{
 }
 
 #strictIndicator{
+	position: absolute;
 	border: 1px solid black;
 	margin-top:2px;
 	margin-bottom:0px;
 	width:5px;
 	height:5px;
-	line-height:5px;
 	background: black;
 }
 #power{
 	width: 60%;
-	margin: 0 20%;
+	margin: 5% 20%;
 	height: 20px;
 }
 .buttLabel{

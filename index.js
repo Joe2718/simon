@@ -459,7 +459,7 @@ $(window).resize(scaleMe);
 
 function scaleMe(){
 	// alright, need to figure out what I want here.
-	console.log('resize functioning');
+	// console.log('resize functioning');
 	var offset = $('main-container').css('border-width');  // might not use this
 	var height  = $(window).height();
 	var width = $(window).width();
@@ -477,7 +477,6 @@ function scaleMe(){
 		setThis = "" + (useDim-10)+"px"; 
 		$('.container').css('height',setThis).css('width',setThis);
 		setThis = "" + (((useDim -30)/2)+1)+ "px solid" ;
-			console.log(setThis) 
 		$('#colorCircle').css({
 			'border':setThis,
 			'border-top-color': 'darkred',
@@ -486,6 +485,42 @@ function scaleMe(){
 			'border-left-color':' darkgreen'
 		});
 		$('#info').css('display','block');
+		// center 
+		setThis = "" + ((useDim - 40)/2) + "px";
+		$('#centerCircle').css('height',setThis).css('width',setThis);  // this should be pretty close to ratio
+		// position for this is negative (width + (2*border)) / 2
+		let tempWidth = ((useDim - 40)/2);
+		setThis = "" + ((tempWidth + (2*10))*-1)/2 + "px";
+		$('#centerCircle').css('top',setThis).css('left',setThis); // now to do all the stuff inside this circle
+		// this is the challenge part - although shouldn't be that bad if I do it right.  tempWidth is going to be key
+		setThis = "" + (tempWidth * .25) + "px"; // font 23% of relative window
+		$('#title').css('font-size',setThis);
+		$('#title').css('height',setThis);
+		// score row just happened that they're squares so made it easy.
+		setThis = "" + (tempWidth * .29) + "px"; // .01 to keep rounding errors from pushing it down
+		$('#scoreContainer').css('width',setThis).css('height',setThis);
+		$('#startDiv').css('width',setThis).css('height',setThis);
+		$('#strictDiv').css('width',setThis).css('height',setThis);
+		// now subcompents of scorerow - the dreaded part for me
+		let tempWidth2 = (tempWidth * .29);  // each component size 
+		let setThisW = "" + (tempWidth2 * .85) + "px";
+		let setThisH = "" + (tempWidth2 * .6) + "px";
+		setThis = "" + (tempWidth2 * .66) + "px"; // font size 
+		$('#scoreDiv').css('width',setThisW).css('height',setThisH).css('font-size',setThis).css('line-height',setThis); 
+		setThis = "" + (tempWidth2 * .3) + "px"; // font size 
+		$('#scoreContainer').css('font-size',setThis);
+		$('#startDiv').css('font-size',setThis);
+		$('#strictDiv').css('font-size',setThis);
+		// first subcomponent finish
+		// gamebutton and strict buttons with texts now
+		setThisW = "" + (tempWidth2 * .42) + "px";
+		$('.button').css('width',setThisW).css('height',setThisW);
+		setThisW = "" + (tempWidth2 * .1) + "px";
+		$('#strictIndicator').css('width',setThisW).css('height',setThisW);
+		setThisH = "" + (tempWidth2 * .05) + "px";
+		setThisW = "" + (tempWidth2 * .44) + "px";
+		$('#strictIndicator').css('top',setThisH).css('left',setThisW);
+		// power switch now... trashing current power switch
 	} else { // smaller screen so going to hide options and instructions buttons
 		$('#info').css('display','none');
 	}
