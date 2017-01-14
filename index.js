@@ -9,6 +9,7 @@ var progress = 0; // step in user playback
 var inGame = false;
 var isComputer = true;
 var soundList = []; // need to use this for the NUMBER and sounds for the sound OBJ.  
+var masterCount =0; // I should get rid of this since it's really not necessary.
 var masterSoundList = [];  // built from JSON file in soundfont directory
 var brightColors = ["lightgrey","red"    ,"blue"    , "yellow"    ,"lime"];      // did these here just to make it easy to 
 var dullColors   = ["grey","darkred","darkblue", "goldenrod" ,"darkgreen"]; // see which colors are used and easy to change.
@@ -18,6 +19,8 @@ var colorSelected=0;// number of color selected fail-0, red-1 blue-2 yellow-3 gr
 var previous=0; // previous selected.  I should have done this with a class or two, too many globals going on.  
 			// although I never planned on it going this far
 var useDim;	
+var context = new AudioContext();  // needed to be able to shut it off when new is pressed
+var o; // needed to shut tone off (should have made all sounds subclasses)
 // ********************* Main onload function  *******************************
 $(function (){
 	addKeys();    // adds keys
@@ -100,7 +103,7 @@ function createSounds(arr){
 
 function soundListCreator(callback){
 	//  Master Sound List Load.
-	let masterCount =0;
+
 	$.ajax({
 		 dataType: "json",
 		 url: "../../../lib/js/soundfont/list.json",
@@ -149,17 +152,84 @@ function soundListCreator(callback){
 		 			);
 		 		}
 		 	}
-		 soundList= [0,34, 57, 78, 79];
-		 createSounds(soundList);
+		 // soundList= [0,34, 57, 78, 79];
+		 // createSounds(soundList);
+		 addOscTones();  // add oscillation tones .. function below
+		 // put OSC in a seperate function so it's not confused with the previous file import.
 		}	//  end of Success 
-	}) // end of file import, get Json was simpler than this ajax type.
+	}); 
 	$('#soundColor span').click(colorEdit);
 	if(typeof callback === 'function'){ callback;}
 }
+// *******************************   oscillation tones   *******************************
+function addOscTones(){
+	$('#soundURL').append(
+		$('<H3/>').text('Oscillator Tones')
+			.css('clear','left')
+			.attr({
+				'class': "acc-header"
+	}));
+	$('#soundURL').append(
+		$('<div/>').attr({
+			'class':'acc-container'
+			}) // .css('clear','left')
+	);
+	var $accContainer = $('.acc-container:last');
+	var trim =0;  // going to trim the ultra low tones
+	for (var key in noteValues){  // heck, this guys method way of storing was easier seems like a hashmap
+		trim++;
+		if (trim > 13){
+			// console.log(key, noteValues[key]);
+			masterSoundList.push(noteValues[key]);  // just pushing the numbers
+			masterCount++;  // why am I doing this?  I could just masterSoundList.length.
+			let toneName = key;
+			$accContainer.append(						
+				$('<div/>').attr({
+					'class':'tonekeys',
+					'tone':masterCount-1
+					// 'onClick': optKey(tAudio[index])
+				})
+				//.addEventListener("click", optKey(tAudio[index],true))
+				.click(function (){
+					var toneNum = $(this).attr('tone');
+					optKey(toneNum);									 				
+				})
+				.text(toneName)
+			);
+		}	
+	}
+	addPresets();
+}
+// *******************************   Presets tones   *******************************
+function addPresets(){
+
+	$('#soundURL').append(
+	$('<H3/>').text('Presets')
+		.css('clear','left')
+		.attr({
+			'class': "acc-header"
+	}));
+	$('#soundURL').append(
+		$('<div/>').attr({
+			'class':'acc-container'
+			}) // .css('clear','left')
+	);
+	var $accContainer = $('.acc-container:last');
+	// ok, ready to add a div with whatever presets I want to  set.
+ // this is the default on load list
+ 	//  soundList= [0,34, 57, 78, 79];  // original Piano list
+ 	soundList= [0,225,232,238,242];  // all tones
+	createSounds(soundList);
+}
 // ********************* clicking on a piano like key in options points here **********************
 function optKey(toneNum){
-	masterSoundList[toneNum].currentTime = 0;
-	masterSoundList[toneNum].play();
+	console.log(typeof masterSoundList[toneNum], toneNum);
+	if (typeof  masterSoundList[toneNum] === 'object'){
+		masterSoundList[toneNum].currentTime = 0;
+		masterSoundList[toneNum].play();
+	} else { // just a tone
+		toneGen(masterSoundList[toneNum],1000);
+	}
 	// previous is storing the selected colornumber to edit
 	// soundList is storing the sounds for the colorNumbers
 	// which also gives me the key divs via $toneloc
@@ -177,8 +247,12 @@ function optKey(toneNum){
 
 // *********************** This just plays sounds then calls color change ***********************************
 function colorSelect(noteNum){  // going to keep this here just in case I want to mess with sound
-	sounds[noteNum].currentTime = 0;
-	sounds[noteNum].play();
+	if (typeof sounds[noteNum]=== 'object'){
+		sounds[noteNum].currentTime = 0;
+		sounds[noteNum].play();
+	} else {
+		toneGen(sounds[noteNum],500);  // plays tone but shorter than normal 1000
+	}
 	setColor(noteNum);
 }
 // ********************** switches color **************************************************************
@@ -252,7 +326,7 @@ function colorClick(num){
 		if (inGame){
 			if (num == current[progress]){
 				progress++;				
-				console.log("Match!  "+ (progress) + "   "+current.length);
+				// console.log("Match!  "+ (progress) + "   "+current.length);
 				colorSelect(num);
 				if(progress == current.length){
 					isComputer=true;
@@ -523,11 +597,11 @@ function scaleMe(){
 		setThisH = "" + (tempWidth2 * .05) + "px";
 		setThisW = "" + (tempWidth2 * .44) + "px";
 		$('#strictIndicator').css('top',setThisH).css('left',setThisW);
-		// power switch now... trashing current power switch
+		// power switch now... trashing current power switch and making new one
 		tempWidth2 = $("#power").width()/4;
 		setThisW = "" + (tempWidth2) + "px";
 		setThisH = "" + (tempWidth2/2) + "px";
-		console.log(setThisW);
+		// console.log(setThisW);
 		$('#power .switch').css('width',setThisW).css('height',setThisH);
 		setThisW = "" + (tempWidth2/2-4) + "px";
 		setThisH = "" + (tempWidth2/2-4) + "px";
@@ -541,4 +615,25 @@ function scaleMe(){
 	// if that reaches some amount (400px ) pop the middle out and place it under or next to the original
 	// I didn't care for popping it out at all, just freezing it at 400px min.
 	// seemed fine at 1600 all the way down to min.. blah, going to scale middle 
+}
+
+function toneGen(toneNum,duration){
+	if (!duration){ duration = 1000;}
+	if(o){
+		// console.log('stopping '+ o)
+		o.stop();
+	} 
+	// var context = new AudioContext();
+	o = context.createOscillator();
+	o.type = "sine";
+	// o.connect(context.destination);
+	var  g = context.createGain();
+	o.connect(g);
+	g.connect(context.destination);
+	var frequency = toneNum;
+	o.frequency.value = frequency;
+	o.start();
+	setTimeout(function (){
+		g.gain.exponentialRampToValueAtTime( 0.00001, context.currentTime + .2 );
+	},duration); // woot!  I have a functioning sound button that makes a tone!
 }
