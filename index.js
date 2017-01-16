@@ -218,8 +218,31 @@ function addPresets(){
 	// ok, ready to add a div with whatever presets I want to  set.
  // this is the default on load list
  	//  soundList= [0,34, 57, 78, 79];  // original Piano list
- 	soundList= [0,225,232,238,242];  // all tones
+ 	// soundList = [0,225,232,238,242];  // close to real game tones  2014 
+ 	soundList = [0,228,238,233,221];  // 70s sounds 
 	createSounds(soundList);
+	acc();  // creates accoridian style in the options 
+}
+// ************************************ plays a Oscillator tone **********************
+function toneGen(toneNum,duration){
+	if (!duration){ duration = 1000;}
+	if(o){
+		// console.log('stopping '+ o)
+		o.stop();
+	} 
+	// var context = new AudioContext();
+	o = context.createOscillator();
+	o.type = "sine";
+	// o.connect(context.destination);
+	var  g = context.createGain();
+	o.connect(g);
+	g.connect(context.destination);
+	var frequency = toneNum;
+	o.frequency.value = frequency;
+	o.start();
+	setTimeout(function (){
+		g.gain.exponentialRampToValueAtTime( 0.00001, context.currentTime + .2 );
+	},duration); // woot!  I have a functioning sound button that makes a tone!
 }
 // ********************* clicking on a piano like key in options points here **********************
 function optKey(toneNum){
@@ -355,6 +378,20 @@ function colorClick(num){
 		}		
 	}
 }
+function colorUnClick(colorNum){
+	switch (colorNum) {
+		case 1: $("#colorCircle").css('border-top-color',dullColors[colorNum]); 
+				break;
+		case 2: $("#colorCircle").css('border-right-color',dullColors[colorNum]); 
+				break;
+		case 3: $("#colorCircle").css('border-bottom-color',dullColors[colorNum]); 
+				break;
+		case 4: $("#colorCircle").css('border-left-color',dullColors[colorNum]); 
+				break;
+		case 0: $("#centerCircle").css('background',dullColors[colorNum]); 
+				break;
+	}
+}
 // ******************************** maps borders to mouse clicks *********************
 function mapBorders(){
 	$('#colorCircle').click(function(ele){
@@ -439,7 +476,37 @@ function addKeys(){
 			//console.log("4");
 			colorClick(4);
 			break;
-
+		// shows keys not tagged yet	
+		default: // console.log(k.keyCode + " keycode has not been mapped.");
+		}
+	}, false);
+	document.addEventListener("keyup", function(k){
+	// console.log(k.keyCode);	
+	switch(k.keyCode){
+		case 38:
+		case 87:
+		case 104:
+			//console.log("8");
+			colorUnClick(1);
+			break;
+		case 68:
+		case 39:
+		case 102:
+			//console.log("6");
+			colorUnClick(2);
+			break;
+		case 83:
+		case 40:
+		case 98:
+			//console.log("2");
+			colorUnClick(3);
+			break;
+		case 65:
+		case 37:
+		case 100:
+			//console.log("4");
+			colorUnClick(4);
+			break;
 		// shows keys not tagged yet	
 		default: // console.log(k.keyCode + " keycode has not been mapped.");
 		}
@@ -617,23 +684,34 @@ function scaleMe(){
 	// seemed fine at 1600 all the way down to min.. blah, going to scale middle 
 }
 
-function toneGen(toneNum,duration){
-	if (!duration){ duration = 1000;}
-	if(o){
-		// console.log('stopping '+ o)
-		o.stop();
-	} 
-	// var context = new AudioContext();
-	o = context.createOscillator();
-	o.type = "sine";
-	// o.connect(context.destination);
-	var  g = context.createGain();
-	o.connect(g);
-	g.connect(context.destination);
-	var frequency = toneNum;
-	o.frequency.value = frequency;
-	o.start();
-	setTimeout(function (){
-		g.gain.exponentialRampToValueAtTime( 0.00001, context.currentTime + .2 );
-	},duration); // woot!  I have a functioning sound button that makes a tone!
+// ************************* accordian ********************************************************
+var accHeaders = [];
+var accContainers = [];
+var accId=[];  // this is just the text of the header in an array that's searchable.  
+			// it makes it simpler but it's not necessary.  
+var accOpened;  // which is currently opened
+function acc() {
+	$( ".acc-header" ).each(function( index ) {
+	  //console.log( index + ": " + $(this).text() );
+	  accHeaders.push($(this));
+	  accId.push($(this).text());  // I feel like making this into an object again already.
+	  $(this).click(accOpen);
+	});
+	$( ".acc-container" ).each(function( index ) {
+		accContainers.push($(this));
+		if (index !== 0){   $(this).animate({
+					        height: 'toggle'
+					  	  });
+		}
+	});
+	accOpened = 0; // setting the opened one to 0;
+}
+function accOpen(){
+	// console.log(this.innerHTML);  // bah! old school is too easy here
+	let clickNum = accId.indexOf(this.innerHTML);  // get's the index of the clicked header
+	if (clickNum !== accOpened){
+		accContainers[clickNum].animate({ height: 'toggle' });
+		accContainers[accOpened].animate({ height: 'toggle' });
+		accOpened = clickNum;
+	}
 }

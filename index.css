@@ -360,3 +360,7 @@ span:hover{
 	cursor: pointer;
 	cursor:hand;
 }
+.acc-header:hover{
+	cursor: pointer;
+	cursor:hand;
+};
