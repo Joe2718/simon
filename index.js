@@ -21,6 +21,7 @@ var previous=0; // previous selected.  I should have done this with a class or t
 var useDim;	
 var context = new AudioContext();  // needed to be able to shut it off when new is pressed
 var o; // needed to shut tone off (should have made all sounds subclasses)
+var tabOpen;
 // ********************* Main onload function  *******************************
 $(function (){
 	addKeys();    // adds keys
@@ -61,6 +62,7 @@ function game(){
 }
 //  ******************************************** play list of keys ************************************************
 function playList(list, oldSpeed){
+	console.log(list);
 	$('#title').css('color','black');
 	var delays;
 	if (list.length == 1){let speed = oldSpeed;}
@@ -120,7 +122,6 @@ function soundListCreator(callback){
 		 			.attr({
 		 				'class': "acc-header"
 		 			}));
-// ********************************  this is area I need to look at for accordian ********************************
 		 		$('#soundURL').append(
 		 			$('<div/>').attr({
 		 				'class':'acc-container'
@@ -208,7 +209,7 @@ function addPresets(){
 		.css('clear','left')
 		.attr({
 			'class': "acc-header"
-	}));
+		}));
 	$('#soundURL').append(
 		$('<div/>').attr({
 			'class':'acc-container'
@@ -217,12 +218,65 @@ function addPresets(){
 	var $accContainer = $('.acc-container:last');
 	// ok, ready to add a div with whatever presets I want to  set.
  // this is the default on load list
+ 	// need to move presets from end of body to here
+	$accContainer.append($("#presets"));
+	$('#presets li').click(function() {
+		var radio = "#" + $(this).attr('id')+" input";
+		let liList = $('#presets li');
+		let idList = [];  // list of the presets to give me an index for the preset array
+		for (var i =0; i < liList.length; i++){
+			idList.push($(liList[i]).attr('id'));
+		}
+		let idOfSelection = idList.indexOf($(this).attr('id'));
+		console.log(idOfSelection); // list of 
+		if (idOfSelection ===0 || idOfSelection ===3){
+			clickNum = 0;
+		} else if (idOfSelection === 1 || idOfSelection === 2||  idOfSelection === 4 || idOfSelection === 5 || idOfSelection === 6){
+			clickNum = 2;
+		}
+		accContainers[3].animate({ height: 'toggle' });
+		accContainers[clickNum].animate({ height: 'toggle' });
+		accOpened = clickNum;
+		$(radio).prop("checked", true);
+		var ms=0;
+		let presets=[[0,34, 57, 78, 79],  [0,228,238,233,221],[0,225,232,238,242],[0,34, 57, 78, 79],[225,235,238,232,215],[208,218,221,215,198],[242,252,255,249,232]];
+
+		presets[idList.indexOf($(this).attr('id'))].forEach(function (tone,index){
+			ms=+1000;
+			previous = index;
+			optKey(tone, true); // true is sound off
+		});
+		playList([1,2,3,4,0],600);
+	});		
  	//  soundList= [0,34, 57, 78, 79];  // original Piano list
  	// soundList = [0,225,232,238,242];  // close to real game tones  2014 
  	soundList = [0,228,238,233,221];  // 70s sounds 
 	createSounds(soundList);
 	acc();  // creates accoridian style in the options 
 }
+// *************************** show tones *************************************************************
+//  just going to make sure options are closed and then cycle thru tones on game
+function 	showTones(){
+	progress=0;
+	tabOpen = '';
+	var closeOpt = function (){
+			$('#options').css('display','block').animate({width: '50px',opacity:0
+		},100, 
+				function (){
+					$('#options').css('display','none');
+				}); 
+				$('#options-tab').css('z-index',7);
+		};
+	 closeOpt();
+	 $('.tab').css('border-color','black black black black');  // close options 
+	 // console.log(sounds);
+	// function tinyRecursion (tempList){
+
+	// })
+	// setColor index
+}
+
+
 // ************************************ plays a Oscillator tone **********************
 function toneGen(toneNum,duration){
 	if (!duration){ duration = 1000;}
@@ -245,13 +299,15 @@ function toneGen(toneNum,duration){
 	},duration); // woot!  I have a functioning sound button that makes a tone!
 }
 // ********************* clicking on a piano like key in options points here **********************
-function optKey(toneNum){
+function optKey(toneNum, mute){
 	console.log(typeof masterSoundList[toneNum], toneNum);
-	if (typeof  masterSoundList[toneNum] === 'object'){
-		masterSoundList[toneNum].currentTime = 0;
-		masterSoundList[toneNum].play();
-	} else { // just a tone
-		toneGen(masterSoundList[toneNum],1000);
+	if(!mute){
+		if (typeof  masterSoundList[toneNum] === 'object'){
+			masterSoundList[toneNum].currentTime = 0;
+			masterSoundList[toneNum].play();
+		} else { // just a tone
+			toneGen(masterSoundList[toneNum],1000);
+		}
 	}
 	// previous is storing the selected colornumber to edit
 	// soundList is storing the sounds for the colorNumbers
@@ -515,7 +571,7 @@ function addKeys(){
 // *************************** all Instruction and Options below **********************
 function addTabs(){
 	var delays;
-	var tabOpen= '';
+	tabOpen= '';
 	$('.menu').click( function(obj){ // clicking instructions tab.
 		var tempClick="";
 		if (this.id == 'options-tab' || this.id == 'X'){  // getting rid of click on options panel due to accordian trial

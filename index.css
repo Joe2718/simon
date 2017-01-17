@@ -18,6 +18,7 @@ p {
 li{
 	text-align: left;
 }
+
 .container {
 	-webkit-user-select: none;  /* Chrome all / Safari all */
   	-moz-user-select: none;     /* Firefox all */
@@ -360,7 +361,28 @@ span:hover{
 	cursor: pointer;
 	cursor:hand;
 }
+.acc-header{
+		border: 1px solid rgba(0,0,0,0);
+}
 .acc-header:hover{
 	cursor: pointer;
 	cursor:hand;
-};
+	border: 1px solid rgba(50,50,50,.6);
+}
+
+#presets{
+	display:inline-block;
+	float:left;
+	list-style-type:none;
+}
+#presets li{
+	width: 90%;
+	float:left;
+	border: 1px solid rgba(0,0,0,0);
+}
+
+#presets li:hover{
+	cursor: pointer;
+	cursor:hand;
+	border: 1px solid rgba(100,100,100,.5);
+}
